@@ -37,7 +37,7 @@
     },
     "address": {
       "@type": "PostalAddress",
-      "addressRegion": "Santa Catarina",
+      "addressRegion": "Brazil",
       "addressCountry": "BR"
     }
   }
@@ -77,6 +77,7 @@
       line-height: 1.75;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      touch-action: manipulation;
     }
 
     /* Grain overlay */
@@ -185,7 +186,7 @@
       height: 2px;
       background: var(--cream);
       margin: 5px 0;
-      transition: all 0.35s var(--ease-expo);
+      transition: transform 0.35s var(--ease-expo), opacity 0.35s var(--ease-expo), background 0.35s var(--ease-expo);
       border-radius: 2px;
     }
     .nav.scrolled .nav-toggle span { background: var(--teal); }
@@ -209,7 +210,7 @@
         radial-gradient(ellipse at 75% 85%, rgba(224, 106, 78, 0.05) 0%, transparent 50%),
         var(--teal);
       overflow: hidden;
-      padding: 5rem 1.5rem 3rem;
+      padding: 5rem 1.5rem 5.5rem;
     }
 
     /* Decorative corner frame */
@@ -247,6 +248,8 @@
       line-height: 0.92;
       margin-bottom: 1.8rem;
       color: var(--cream);
+      text-shadow: 0 4px 40px rgba(0, 0, 0, 0.2);
+      text-wrap: balance;
     }
     .hero-name-first {
       display: block;
@@ -367,7 +370,7 @@
       padding: 0.9rem 2.2rem;
       border: none;
       cursor: pointer;
-      transition: all 0.35s var(--ease-expo);
+      transition: background 0.35s var(--ease-expo), color 0.35s var(--ease-expo), transform 0.35s var(--ease-expo), box-shadow 0.35s var(--ease-expo), border-color 0.35s var(--ease-expo);
       position: relative;
     }
     .btn-primary {
@@ -561,7 +564,7 @@
       background: rgba(226, 217, 162, 0.06);
       border: 1px solid rgba(226, 217, 162, 0.1);
       color: var(--cream);
-      transition: all 0.3s;
+      transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.3s;
     }
     .skill-tag:hover {
       background: rgba(226, 217, 162, 0.12);
@@ -911,8 +914,9 @@
         gap: 2.5rem;
         opacity: 0;
         visibility: hidden;
-        transition: all 0.45s var(--ease-expo);
+        transition: opacity 0.45s var(--ease-expo), visibility 0.45s;
         z-index: 999;
+        overscroll-behavior: contain;
       }
       .nav-links.open {
         opacity: 1;
@@ -925,6 +929,7 @@
       .nav-links.open .nav-link:hover,
       .nav-links.open .nav-link.active { color: var(--cream); }
       .nav-toggle { display: block; }
+      .hero-scroll { display: none; }
 
       .section { padding: 4rem 0; }
 
@@ -961,6 +966,71 @@
       .stat-badge { padding: 1rem 0.75rem; }
       .stat-number { font-size: 1.5rem; }
     }
+    /* ═══════════════════════════════════════
+       POLISH & MICRO-INTERACTIONS
+       ═══════════════════════════════════════ */
+    ::selection {
+      background: rgba(224, 106, 78, 0.2);
+      color: var(--teal);
+    }
+    .section.dark ::selection,
+    .hero ::selection,
+    .footer ::selection {
+      background: rgba(224, 106, 78, 0.3);
+      color: var(--cream);
+    }
+
+    section[id] { scroll-margin-top: 72px; }
+    .section-title,
+    .contact-heading { text-wrap: balance; }
+    .stat-number { font-variant-numeric: tabular-nums; }
+
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--coral), var(--gold));
+      z-index: 1002;
+      width: 0;
+      pointer-events: none;
+      transform-origin: left;
+    }
+
+    .nav-logo { transition: opacity 0.3s; }
+    .nav-logo:hover { opacity: 0.75; }
+
+    .timeline-company { transition: color 0.3s var(--ease-expo); }
+    .timeline-item:hover .timeline-company { color: var(--coral); }
+
+    .stat-badge { transition: transform 0.3s var(--ease-expo), box-shadow 0.3s; }
+    .stat-badge:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(10, 55, 58, 0.08);
+    }
+
+    .project-number { transition: color 0.4s; }
+    .project-card:hover .project-number { color: rgba(224, 106, 78, 0.2); }
+
+    .skill-category { transition: border-color 0.3s; }
+    .skill-category:hover { border-color: rgba(226, 217, 162, 0.2); }
+
+    .edu-card { transition: border-color 0.3s; }
+    .edu-card:hover { border-color: rgba(226, 217, 162, 0.2); }
+
+    .contact-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--coral);
+      transition: width 0.3s var(--ease-expo);
+    }
+    .contact-link { position: relative; }
+    .contact-link:hover::after { width: 100%; }
+
     /* ═══════════════════════════════════════
        ACCESSIBILITY
        ═══════════════════════════════════════ */
@@ -1006,6 +1076,7 @@
 <body>
 
   <a href="#main" class="skip-link">Skip to content</a>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
   <!-- ═══════════ NAVIGATION ═══════════ -->
   <nav class="nav" id="nav" aria-label="Main navigation">
@@ -1048,7 +1119,7 @@
         <span></span>
       </div>
       <p class="hero-title">Senior Frontend Engineer</p>
-      <p class="hero-location">Santa Catarina, Brazil · Open to Remote</p>
+      <p class="hero-location">Based in Brazil · Open to Remote</p>
       <div class="hero-stats">
         <span>6+ Years</span>
         <span class="hero-dot">·</span>
@@ -1444,6 +1515,41 @@
       });
     };
     window.addEventListener('scroll', spyScroll, { passive: true });
+
+    // Scroll progress
+    const scrollProgress = document.getElementById('scrollProgress');
+    const updateProgress = () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight > 0) scrollProgress.style.width = `${(window.scrollY / docHeight) * 100}%`;
+    };
+    window.addEventListener('scroll', updateProgress, { passive: true });
+
+    // Counter animation on stats
+    const easeOutExpo = (t) => t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.querySelectorAll('.stat-number').forEach(el => {
+            const text = el.textContent.trim();
+            const match = text.match(/^(\d+)(.*)$/);
+            if (!match) return;
+            const target = parseInt(match[1]);
+            const suffix = match[2];
+            const duration = 1400;
+            const start = performance.now();
+            const tick = (now) => {
+              const progress = Math.min((now - start) / duration, 1);
+              el.textContent = Math.round(easeOutExpo(progress) * target) + suffix;
+              if (progress < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          });
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    const aboutStats = document.querySelector('.about-stats');
+    if (aboutStats) counterObserver.observe(aboutStats);
 
     // Mobile menu
     const navToggle = document.getElementById('navToggle');
