@@ -1130,6 +1130,7 @@
       <div class="hero-ctas">
         <a href="#projects" class="btn btn-primary">View Work</a>
         <a href="#contact" class="btn btn-outline">Say Hello</a>
+        <a id="cvDownload" class="btn btn-outline" download>Download CV</a>
       </div>
     </div>
     <div class="hero-scroll">
@@ -1467,6 +1468,13 @@
 
   <!-- ═══════════ SCRIPTS ═══════════ -->
   <script>
+    // CV download — pt-BR locale gets Portuguese CV, everyone else gets English
+    const isBR = navigator.languages
+      ? navigator.languages.some(l => /^pt[-_]?BR$/i.test(l))
+      : /^pt[-_]?BR$/i.test(navigator.language || '');
+    const cvLink = document.getElementById('cvDownload');
+    cvLink.href = isBR ? '/cv/joao_kuster.docx' : '/cv/joao_kusteren.docx';
+
     // Scroll reveal
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
